@@ -1,28 +1,26 @@
 package sim;
 
+import java.util.Collections;
 import java.util.Random;
 import java.util.ArrayList;
 
-public class Market {
+public abstract class Market {
     String name;
-    public Market(String name) {
-        this.name=name;
-    }
-    public Boolean handleTransaction(Seller seller,Buyer buyer) {
-        if (buyer.Bid >= seller.Ask){
-            return true;}
-        else{
-            return false;
-        }
-    }
-    public Integer findTransaction(ArrayList<Seller> sellers, ArrayList<Buyer> buyers) {
 
-        return null;
-    }
-    public static void main(String[] args) {
-        Market market = new Market("market");
-        Seller sell1 = new Seller("0",10.0);
-        Buyer buy1 = new Buyer("0",12.0);
-        System.out.println(market.handleTransaction(sell1, buy1));
+    public static void handleTransactions(ArrayList<Seller> allSellers, ArrayList<Buyer> allBuyers) {
+        int iterations;
+        if(allSellers.size() < allBuyers.size()) {
+            iterations = allSellers.size();
+        }else {
+            iterations = allBuyers.size();
+        }
+
+        //randomised temp arraylist of Buyers
+        ArrayList<Buyer> randallBuyers = allBuyers;
+        Collections.shuffle(randallBuyers);
+
+        for(int i = 0; i < iterations; i++) {
+            Transaction transaction = new Transaction(allSellers.get(i), randallBuyers.get(i));
+        }
     }
 }

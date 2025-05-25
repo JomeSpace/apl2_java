@@ -6,22 +6,23 @@ import static random.generator.NormalDistribution.getStdDev;
 public class Buyer {
         public String id;
         Double Bid;
+        Boolean lastRoundSuccess;
 
         public Buyer(String id, Double Bid){
             this.id = id;
             this.Bid = getStdDev(Bid);
         }
 
-        Double setBid(){
-
-            return this.Bid;
-        }
-    public void changeBid(Boolean success){
+    public void updateBid(){
         //update bid based on sell success in last cycle
-        if(success == true){
-            this.Bid -= this.Bid*0.01;
-        }else if(success == false){
-            this.Bid += this.Bid*0.01;
+        if(this.lastRoundSuccess==null) {
+            this.lastRoundSuccess = false;
         }
+        if(this.lastRoundSuccess == true){
+            this.Bid -= 1;
+        }else if(lastRoundSuccess == false){
+            this.Bid += 1;
+        }
+        this.lastRoundSuccess = null;
     }
 }
