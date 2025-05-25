@@ -3,7 +3,7 @@ package sim;
 import static random.generator.NormalDistribution.getStdDev;
 
 public class Seller {
-    String id;
+    public String id;
     Double Ask;
     Boolean stock;
     public Seller(String id, Double Ask) {

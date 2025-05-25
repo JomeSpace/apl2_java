@@ -1,6 +1,9 @@
 package sim;
 
+import java.util.ArrayList;
 import java.util.Random;
+import java.util.Collections;
+
 
 import static java.lang.Thread.sleep;
 
@@ -8,35 +11,60 @@ public class pocMain {
 
 
     public static void main(String[] args) throws InterruptedException {
-        int nSeller = 5;  // Number of Seller instances
-        int nBuyer = 5;  // Number of Buyer instances
+        int nSeller = 3;  // Number of Seller instances
+        int nBuyer = 15;  // Number of Buyer instances
 
-        Seller[] sellers = new Seller[nSeller];
-        Buyer[] buyers = new Buyer[nBuyer];
+        //parameters
+        Double Elastisity=0.1;
+
+        ArrayList<Seller> sellers = new ArrayList<>();
+        ArrayList<Buyer> buyers = new ArrayList<>();
 
         for (int i = 0; i < nSeller; i++) {
             int id = i;
-            sellers[i] = new Seller("seller"+id,100.0);
+            sellers.add(i, new Seller("seller" + id, 50.0));
         }
         for (int i = 0; i < nBuyer; i++) {
             int id = i;
-            buyers[i] = new Buyer("buyer"+id,10.0);
+            buyers.add(i, new Buyer("buyer" + id, 50.0));
         }
         Market base = new Market("market");
         while(true) {
-            for (int i = 0; i < nSeller; i++) {
+            for (int i = 0; i < 15; i++) {
                 Random rand = new Random();
 
                 //random temp array
+                ArrayList<Buyer> randomBuyers = new ArrayList<Buyer>(buyers);
 
-                Boolean outcome = base.handleTransaction(sellers[indexSeller],buyers[indexBuyer]);
+                Collections.shuffle(randomBuyers);//shuffle the array to be ordered randomly
 
-                System.out.println(outcome+sellers[indexSeller].Ask.toString()+" "+buyers[indexBuyer].Bid.toString()+" "+sellers[indexSeller].Ask.toString());
+                Boolean outcome;
+                if(nBuyer < i+1 | nSeller < i+1) {
+                    outcome = false;
+                }else{
+                    outcome = base.handleTransaction(sellers.get(i), randomBuyers.get(i));
+                    System.out.println("Sellerid"+sellers.get(i).id+" randomBuyerId:"+randomBuyers.get(i).id);
+                }
+                if(buyers.size() >= i+1){
+                    buyers.get(i).changeBid(outcome);
+                    System.out.println(buyers.get(i).id+"called");
+                }
+                if(sellers.size() >= i+1){
+                    System.out.println(outcome);
+                    sellers.get(i).changeAsk(outcome);
+                }
 
-                sellers[indexSeller].changeAsk(outcome);
-                buyers[indexBuyer].changeBid(outcome);
+
             }
-            sleep(1000);
+            for(Buyer buyer : buyers){
+                System.out.println("Buyer:"+buyer.id+" "+buyer.Bid.toString());
+            }
+            System.out.println("\n");
+            for(Seller seller : sellers){
+                System.out.println("Seller:"+seller.id+" "+seller.Ask.toString());
+            }
+            System.out.println("\n"+"\n");
+            sleep(100);
         }
 
     }

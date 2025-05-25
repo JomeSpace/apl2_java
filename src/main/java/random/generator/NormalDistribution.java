@@ -18,7 +18,7 @@ public class NormalDistribution {
         // Generate a standard normal (mean=0, stddev=1)
         double standardNormal = ThreadLocalRandom.current().nextGaussian();
         // Scale and shift to get desired mean and stddev
-        return mean + 2 * standardNormal;
+        return mean + 1 * standardNormal;
     }
 
     /**

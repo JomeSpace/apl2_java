@@ -4,7 +4,7 @@ import static random.generator.NormalDistribution.getStdDev;
 
 
 public class Buyer {
-        String id;
+        public String id;
         Double Bid;
 
         public Buyer(String id, Double Bid){
