@@ -10,12 +10,14 @@ public class Buyers {
             allBuyers.add(new Buyer(Id,bid));
         }
     }
-    public void updateBids(){
+    public void updateBids() {
         for (Buyer buyer : allBuyers) {
-                buyer.updateBid();
+                if(buyer.status) {
+                    buyer.updateBid();
+                }
         }
     }
-    public Double getAverageBid(){
+    public Double getAverageBid() {
         Double sum = 0.0;
         for (Buyer buyer : allBuyers) {
             sum+=buyer.Bid;

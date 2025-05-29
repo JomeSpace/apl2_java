@@ -8,19 +8,21 @@ public abstract class Market {
     String name;
 
     public static void handleTransactions(ArrayList<Seller> allSellers, ArrayList<Buyer> allBuyers) {
-        int iterations;
-        if(allSellers.size() < allBuyers.size()) {
-            iterations = allSellers.size();
-        }else {
-            iterations = allBuyers.size();
-        }
+        //determine the number of possible transaction
+        int iterations = Math.min(allSellers.size(), allBuyers.size());
 
         //randomised temp arraylist of Buyers
         ArrayList<Buyer> randallBuyers = allBuyers;
         Collections.shuffle(randallBuyers);
 
+        //randomised temp arraylist of Buyers
+        ArrayList<Seller> randallSellers = allSellers;
+        Collections.shuffle(randallSellers);
+
         for(int i = 0; i < iterations; i++) {
-            Transaction transaction = new Transaction(allSellers.get(i), randallBuyers.get(i));
+            if(allSellers.get(i).status & randallBuyers.get(i).status) {
+                Transaction transaction = new Transaction(randallSellers.get(i), randallBuyers.get(i));
+            }
         }
     }
 }

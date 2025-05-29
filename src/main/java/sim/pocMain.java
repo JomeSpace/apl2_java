@@ -9,12 +9,11 @@ import static java.lang.Thread.sleep;
 
 public class pocMain {
 
-
     public static void main(String[] args) throws InterruptedException {
-        int nSeller = 3;  // Number of Seller instances
-        int nBuyer = 3;  // Number of Buyer instances
+        int nSeller = 5;  // Number of Seller instances
+        int nBuyer = 10;  // Number of Buyer instances
 
-        Sellers sellers = new Sellers(nSeller,10.0);
+        Sellers sellers = new Sellers(nSeller,20.0);
         Buyers buyers = new Buyers(nBuyer,20.0);
 
         while(true) {
