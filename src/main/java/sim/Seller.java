@@ -12,7 +12,7 @@ public class Seller {
     public Seller(String id, Double Ask) {
         this.id = id;
         this.Ask = getStdDev(Ask);
-        this.askMin = this.Ask - 20;
+        this.askMin = 0.5*this.Ask;
         this.status = true;
     }
     public void updateAsk() {
@@ -29,5 +29,17 @@ public class Seller {
         }
 
         this.lastRoundSuccess = null;
+    }
+
+    public String getId() {
+        return this.id;
+    }
+
+    public double getAsk() {
+        return this.Ask;
+    }
+
+    public double getAskMin() {
+        return this.askMin;
     }
 }

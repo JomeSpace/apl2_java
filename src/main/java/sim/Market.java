@@ -12,15 +12,15 @@ public abstract class Market {
         int iterations = Math.min(allSellers.size(), allBuyers.size());
 
         //randomised temp arraylist of Buyers
-        ArrayList<Buyer> randallBuyers = allBuyers;
+        ArrayList<Buyer> randallBuyers = new ArrayList<>(allBuyers);
         Collections.shuffle(randallBuyers);
 
         //randomised temp arraylist of Buyers
-        ArrayList<Seller> randallSellers = allSellers;
+        ArrayList<Seller> randallSellers = new ArrayList<>(allSellers);
         Collections.shuffle(randallSellers);
 
         for(int i = 0; i < iterations; i++) {
-            if(allSellers.get(i).status & randallBuyers.get(i).status) {
+            if(randallSellers.get(i).status & randallBuyers.get(i).status) {
                 Transaction transaction = new Transaction(randallSellers.get(i), randallBuyers.get(i));
             }
         }

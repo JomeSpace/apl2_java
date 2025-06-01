@@ -7,7 +7,7 @@ public class Transaction extends Market {
     Boolean success;
 
     public Transaction(Seller seller, Buyer buyer) {
-        IdService IdService=new IdService();
+        IdService IdService = new IdService();
         this.Id=IdService.createId();
 
         if (buyer.Bid > seller.Ask){

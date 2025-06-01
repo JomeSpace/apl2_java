@@ -2,7 +2,7 @@ package sim;
 
 import java.util.ArrayList;
 
-public class Sellers extends pocMain {
+public class Sellers {
     ArrayList<Seller> allSellers = new ArrayList<Seller>();
     public Sellers(int n,Double Bid) {
         for (int i = 0; i < n; i++) {
@@ -19,9 +19,13 @@ public class Sellers extends pocMain {
     }
     public Double getAverageAsk(){
         Double sum = 0.0;
+        int count = 0;
         for (Seller seller : allSellers) {
-            sum+=seller.Ask;
+            if(seller.status) {
+                sum+=seller.Ask;
+                count++;
+            }
         }
-        return sum/allSellers.size();
+        return sum/count;
     }
 }

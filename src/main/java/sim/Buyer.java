@@ -7,16 +7,15 @@ public class Buyer {
         public String id;
         Double Bid;
         Boolean lastRoundSuccess;
-        Double bidMax;
+        final Double bidMax;
         Boolean status;
 
 
     public Buyer(String id, Double Bid){
         this.id = id;
         this.Bid = getStdDev(Bid);
-        this.bidMax = this.Bid + 20;
+        this.bidMax = 2*this.Bid;
         this.status = true;
-
     }
 
     public void updateBid(){
@@ -33,5 +32,17 @@ public class Buyer {
         }
 
         this.lastRoundSuccess = null;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public Double getBid() {
+        return Bid;
+    }
+
+    public Double getMaxBid(){
+        return bidMax;
     }
 }
