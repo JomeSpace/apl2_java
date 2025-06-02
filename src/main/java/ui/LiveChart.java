@@ -3,6 +3,7 @@ package ui;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.layout.BorderPane;
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class LiveChart extends Application {
 
-    private final SimManager simManager = new SimManager(10, 8); // start with 3 sellers & 3 buyers
+    private final SimManager simManager = new SimManager(9, 10); // start with 3 sellers & 3 buyers
     private final XYChart.Series<String, Number> buyerBidSeries = new XYChart.Series<>();
     private final XYChart.Series<String, Number> buyerBidMaxSeries = new XYChart.Series<>();
 
@@ -26,11 +27,11 @@ public class LiveChart extends Application {
         BorderPane root = new BorderPane();
 
         //Buyers Chart
-        BarChart chartBuyers = new BarChart("Buyer");
+        BarChart chartBuyers = new BarChart("buyer");
         root.setTop(chartBuyers.createStackedBarChart());
 
         //Sellers Chart
-        BarChart chartSellers = new BarChart("Seller");
+        BarChart chartSellers = new BarChart("seller");
         root.setBottom(chartSellers.createStackedBarChart());
 
         Timeline timeline1 = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
@@ -39,8 +40,6 @@ public class LiveChart extends Application {
         }));
         timeline1.setCycleCount(Timeline.INDEFINITE);
         timeline1.play();
-
-
 
 
         Scene scene = new Scene(root, 800, 1000);

@@ -15,7 +15,6 @@ public class SimManager {
     public void runSim() {
         Thread simThread = new Thread(() -> {
             while (true) {
-                this.buyers.printBuyers();
                 Market.handleTransactions(sellers.allSellers, buyers.allBuyers);
 
                 this.sellers.updateBids();

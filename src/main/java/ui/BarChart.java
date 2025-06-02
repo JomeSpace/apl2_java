@@ -8,6 +8,7 @@ import javafx.scene.layout.StackPane;
 import sim.dto;
 
 import java.util.List;
+import java.util.Objects;
 
 public class BarChart {
     private final XYChart.Series<String, Number> ValueSeries = new XYChart.Series<>();
@@ -15,7 +16,11 @@ public class BarChart {
     String type;
 
     public BarChart(String type) {
-        this.type = type;
+        if(Objects.equals(type, "buyer") || Objects.equals(type, "seller")){
+            this.type = type;
+        } else {
+            throw new IllegalArgumentException("Invalid type");
+        }
     }
 
     public StackPane createStackedBarChart() {
@@ -31,23 +36,39 @@ public class BarChart {
         stackedBarChart.setTitle("Value and Limit of "+this.type);
         stackedBarChart.setAnimated(false);
 
-        //preparing xAxis Data
+        //naming the data series
         ValueSeries.setName(this.type+" Values");
-        stackedBarChart.getData().add(ValueSeries);
         LimitSeries.setName(this.type+" Limits");
-        stackedBarChart.getData().add(LimitSeries);
+
+        List<XYChart.Series<String, Number>> seriesList;
+
+        if (type.equals("buyer")) {
+            seriesList = List.of(ValueSeries,LimitSeries);
+        } else {
+            seriesList = List.of(LimitSeries, ValueSeries);
+        }
+
+        stackedBarChart.getData().addAll(seriesList);
 
         return new StackPane(stackedBarChart);
     }
-    public void updateChart(List<dto> buyerData) {
+    public void updateChart(List<dto> Data) {
         // Clear previous data
         ValueSeries.getData().clear();
         LimitSeries.getData().clear();
 
-        for (dto dtoBuyer : buyerData) {
-            ValueSeries.getData().add(new XYChart.Data<>(dtoBuyer.id(), dtoBuyer.value()));
-            LimitSeries.getData().add(new XYChart.Data<>(dtoBuyer.id(), Math.abs(dtoBuyer.limit()-dtoBuyer.value())));
+        if(type.equals("buyer")){
+            for (dto dtoData : Data) {
+                ValueSeries.getData().add(new XYChart.Data<>(dtoData.id(), dtoData.value()));
+                LimitSeries.getData().add(new XYChart.Data<>(dtoData.id(), Math.abs(dtoData.limit()-dtoData.value())));
+            }
+        } else {
+            for (dto dtoData : Data) {
+                LimitSeries.getData().add(new XYChart.Data<>(dtoData.id(), dtoData.limit()));
+                ValueSeries.getData().add(new XYChart.Data<>(dtoData.id(), dtoData.value() - dtoData.limit()));
+            }
         }
+
     }
 }
 
