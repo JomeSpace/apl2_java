@@ -1,5 +1,7 @@
 package ui;
 
+import javafx.application.Platform;
+import javafx.scene.Node;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.StackedBarChart;
@@ -57,18 +59,42 @@ public class BarChart {
         ValueSeries.getData().clear();
         LimitSeries.getData().clear();
 
-        if(type.equals("buyer")){
-            for (dto dtoData : Data) {
-                ValueSeries.getData().add(new XYChart.Data<>(dtoData.id(), dtoData.value()));
-                LimitSeries.getData().add(new XYChart.Data<>(dtoData.id(), Math.abs(dtoData.limit()-dtoData.value())));
-            }
-        } else {
-            for (dto dtoData : Data) {
-                LimitSeries.getData().add(new XYChart.Data<>(dtoData.id(), dtoData.limit()));
-                ValueSeries.getData().add(new XYChart.Data<>(dtoData.id(), dtoData.value() - dtoData.limit()));
+
+            for (int i = 0; i < Data.size(); i++) {
+                XYChart.Data<String, Number> valueData;
+                XYChart.Data<String, Number> limitData;
+                if(type.equals("buyer")){
+                    valueData = new XYChart.Data<>(
+                            Data.get(i).id() + " " + Data.get(i).status(),
+                            Data.get(i).value()
+                    );
+                    limitData = new XYChart.Data<>(
+                            Data.get(i).id() + " " + Data.get(i).status(),
+                            Data.get(i).limit()- Data.get(i).value()
+                    );
+
+                    ValueSeries.getData().add(valueData);
+                    LimitSeries.getData().add(limitData);
+                }else {
+                    valueData = new XYChart.Data<>(
+                            Data.get(i).id() + " " + Data.get(i).status(),
+                            Data.get(i).value()- Data.get(i).limit()
+                    );
+                    limitData = new XYChart.Data<>(
+                            Data.get(i).id() + " " + Data.get(i).status(),
+                            Data.get(i).limit()
+                    );
+                    LimitSeries.getData().add(limitData);
+                    ValueSeries.getData().add(valueData);
+                }
+                Node limitNode = limitData.getNode();
+                Node valueNode = valueData.getNode();
+                if (limitNode != null && !Data.get(i).status()) {
+                    limitNode.setStyle("-fx-bar-fill: #464545;");
+                }
+                if (valueNode != null && !Data.get(i).status()) {
+                    valueNode.setStyle("-fx-bar-fill: #464545;");
+                }
             }
         }
-
     }
-}
-

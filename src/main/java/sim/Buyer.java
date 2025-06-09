@@ -45,4 +45,5 @@ public class Buyer {
     public Double getMaxBid(){
         return bidMax;
     }
+    public boolean getStatus() { return this.status; }
 }

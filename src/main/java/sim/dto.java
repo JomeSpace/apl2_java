@@ -1,3 +1,3 @@
 package sim;
 
-public record dto(String id, double value, double limit) {}
+public record dto(String id, double value, double limit, boolean status) {}

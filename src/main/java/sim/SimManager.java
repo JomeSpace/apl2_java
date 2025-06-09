@@ -8,12 +8,17 @@ public class SimManager {
     Buyers buyers;
 
     public SimManager(int nSeller, int nBuyer) {
-        this.sellers = new Sellers(nSeller,20.0);
-        this.buyers = new Buyers(nBuyer,20.0);
+        this.sellers = new Sellers(nSeller,50.0);
+        this.buyers = new Buyers(nBuyer,50.0);
     }
 
     public void runSim() {
         Thread simThread = new Thread(() -> {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             while (true) {
                 Market.handleTransactions(sellers.allSellers, buyers.allBuyers);
 
@@ -37,7 +42,7 @@ public class SimManager {
     public List<dto> getBuyerData() {
         return buyers.allBuyers.stream()
                 .map(b -> {
-                    return new dto(b.getId(), b.getBid(),b.getMaxBid());
+                    return new dto(b.getId(), b.getBid(),b.getMaxBid(), b.getStatus());
                 })
                 .toList();
     }
@@ -45,7 +50,7 @@ public class SimManager {
     public List<dto> getSellerData() {
         return sellers.allSellers.stream()
                 .map(a -> {
-                    return new dto(a.getId(), a.getAsk(),a.getAskMin());
+                    return new dto(a.getId(), a.getAsk(),a.getAskMin(),a.getStatus());
                 })
                 .toList();
     }

@@ -38,8 +38,10 @@ public class Seller {
     public double getAsk() {
         return this.Ask;
     }
-
     public double getAskMin() {
         return this.askMin;
+    }
+    public boolean getStatus() {
+        return this.status;
     }
 }

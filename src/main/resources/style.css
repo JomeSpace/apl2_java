@@ -1,0 +1,17 @@
+/* Example: style.css */
+
+.root {
+    -fx-background-color: #ffffff;
+}
+.label {
+    -fx-font-size: 16px;
+    -fx-text-fill: #333;
+}
+.bar-chart {
+    -fx-background-color: #000000;
+    -fx-border-color: #ccc;
+    -fx-border-width: 1px;
+}
+.default-color0.chart-bar {
+    -fx-bar-fill: #3498db; /* Blue for series 0 */
+}
