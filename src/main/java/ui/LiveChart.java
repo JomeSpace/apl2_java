@@ -16,7 +16,7 @@ import sim.SimManager;
 
 public class LiveChart extends Application {
 
-    private final SimManager simManager = new SimManager(5, 10); // start with 3 sellers & 3 buyers
+    private final SimManager simManager = new SimManager(9, 10); // start with 3 sellers & 3 buyers
     private final XYChart.Series<String, Number> buyerBidSeries = new XYChart.Series<>();
     private final XYChart.Series<String, Number> buyerBidMaxSeries = new XYChart.Series<>();
 

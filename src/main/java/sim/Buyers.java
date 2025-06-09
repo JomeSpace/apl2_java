@@ -9,7 +9,6 @@ public class Buyers {
             String Id = String.valueOf(i);
             allBuyers.add(new Buyer(Id,bid));
         }
-
     }
     public void updateBids() {
         for (Buyer buyer : allBuyers) {
