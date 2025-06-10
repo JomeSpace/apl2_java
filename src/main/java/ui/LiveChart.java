@@ -1,82 +1,132 @@
 package ui;
 
+import dto.collection.ParamDTO;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.chart.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import sim.SimManager;
 
-public class LiveChart  {
+public class LiveChart {
 
     BorderPane root = new BorderPane();
-    private final SimManager simManager = new SimManager(9, 10); // start with 3 sellers & 3 buyers
-    private final XYChart.Series<String, Number> buyerBidSeries = new XYChart.Series<>();
-    private final XYChart.Series<String, Number> buyerBidMaxSeries = new XYChart.Series<>();
-
+    private SimManager simManager;
+    Timeline timeline1;
+    BarChart chartBuyers;
+    BarChart chartSellers;
+    StatisticLineChart statisticLineChart;
 
     public void start() {
-
-
-        GridPane grid = new GridPane();
-        root.setCenter(grid);
         root.getStyleClass().add("root");
 
-        //Buyers Chart
-        BarChart chartBuyers = new BarChart("buyer");
+        // Grid for charts and controls
+        GridPane grid = new GridPane();
+        grid.setHgap(20);
+        grid.setVgap(20);
+        grid.setPadding(new Insets(20));
+
+        // Buyer Chart
+        chartBuyers = new BarChart("buyer");
         Node chartBuyersNode = chartBuyers.createStackedBarChart();
-        root.setTop(chartBuyersNode);
-        root.getStyleClass().add("bar-chart-buyer");
         grid.add(chartBuyersNode, 0, 0);
 
-        //Sellers Chart
-        BarChart chartSellers = new BarChart("seller");
+        // Seller Chart
+        chartSellers = new BarChart("seller");
         Node chartSellerNode = chartSellers.createStackedBarChart();
-        root.setBottom(chartSellerNode);
-        root.getStyleClass().add("bar-chart-seller");
         grid.add(chartSellerNode, 0, 1);
 
-        //Statistics Line Chart
-        StatisticLineChart statisticLineChart = new StatisticLineChart();
+        // Statistic Line Chart
+        statisticLineChart = new StatisticLineChart();
         Node statisticLineChartNode = statisticLineChart.createLineChart();
-        root.setRight(statisticLineChartNode);
-        grid.add(statisticLineChartNode, 1, 0);
+        grid.add(statisticLineChartNode, 1, 0, 1, 2); // spans two rows
 
-        Button stoppButton = new Button("Stop Simulation");
-        stoppButton.setOnAction(e -> {
-            simManager.stopSimThread();
+        // Label above stop button
+        Label stopLabel = new Label("Controls:");
+        stopLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
+
+        // Stop Button
+        Button stopButton = new Button("leave Simulation");
+       stopButton.setStyle("-fx-background-color: red; -fx-text-fill: white;");
+        stopButton.setOnAction(e -> {
+            simManager.killSimThread();
             Platform.exit();
         });
 
-        grid.add(stoppButton,1,1);
+        // Pause/Resume Button
+        Button resumepauseButton = new Button("Pause/Resume Simulation");
+        resumepauseButton.setOnAction(e -> {
+            if (simManager.isPaused()) {
+                simManager.resumeThread();
+                resumepauseButton.setStyle("-fx-background-color: green; -fx-text-fill: white;");
+            } else {
+                simManager.pauseThread();
+            }
+        });
 
-        Timeline timeline1 = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+        // Set style for pause/resume Box
+        HBox ButtonsBox = new HBox(10, stopButton, resumepauseButton);
+        ButtonsBox.setAlignment(Pos.CENTER);
+
+        // VBox for label + button
+        VBox ControlBox = new VBox(10, stopLabel, ButtonsBox);
+        ControlBox.setAlignment(Pos.CENTER);
+        ControlBox.setPadding(new Insets(10));
+
+        // Add to grid in bottom right
+        grid.add(ControlBox, 1, 2); // new row below the charts
+        // css styling
+        ControlBox.getStyleClass().add("stop-box");
+        stopButton.getStyleClass().add("button");
+        resumepauseButton.getStyleClass().add("button");
+        /*
+        HBox infoBox = new HBox(10,
+                new Label("Average Bid: "+ averageValue())
+        );
+        grid.add(infoBox, 0,2);*/
+        // Set grid as center of root pane
+        root.setCenter(grid);
+    }
+    /*private Double averageValue() {
+        return simManager.getBuyerData().stream()
+                .mapToDouble(dto -> dto.value())  // assuming value1 = bid
+                .average()
+                .orElse(0.0);
+    }*/
+
+    public void startChartUpdateLoop() {
+        timeline1 = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            if (!simManager.running) {
+                timeline1.stop(); // Stop if simulation is completely terminated
+                return;
+            }
+
+            if (simManager.paused) {
+                // Skip updates while paused
+                return;
+            }
+
+            // Regular update logic
             chartBuyers.updateChart(simManager.getBuyerData());
             chartSellers.updateChart(simManager.getSellerData());
             statisticLineChart.updateChart(simManager.getBuyerData(), simManager.getSellerData());
         }));
         timeline1.setCycleCount(Timeline.INDEFINITE);
         timeline1.play();
-
-
-        HBox charts = new HBox(10, grid);
-        charts.setPadding(new Insets(20));
-        root.setCenter(charts);
-
-        simManager.startSimThread();
     }
-    public Parent getView() {
+    public Parent getView(ParamDTO configs) {
+        simManager = new SimManager(configs);
+        simManager.startSimThread();
+        startChartUpdateLoop();
         start();
         return root;
     }

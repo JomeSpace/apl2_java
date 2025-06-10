@@ -28,9 +28,13 @@ public class Buyers {
         }
         return sum/count;
     }
-    public void printBuyers() {
+    public int getNumActives() {
+        int count = 0;
         for (Buyer buyer : allBuyers) {
-            System.out.println(buyer.id+" "+buyer.Bid+" "+buyer.status);
+            if(buyer.status) {
+                count++;
+            }
         }
+        return count;
     }
 }

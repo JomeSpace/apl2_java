@@ -5,7 +5,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.layout.StackPane;
-import dto.collection.dto;
+import dto.collection.DTO;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public class StatisticLineChart {
     Integer time;
 
     public StatisticLineChart() {
-        SellerAverageList.setName("Seller Average");
+        SellerAverageList.setName("Seller Average Ask");
         BuyerAverageList.setName("Buyer Average");
         this.time = 0;
     }
@@ -23,10 +23,11 @@ public class StatisticLineChart {
         CategoryAxis xAxis = new CategoryAxis();
         NumberAxis yAxis = new NumberAxis();
         xAxis.setLabel("Time");
-        yAxis.setLabel("Average Value");
+        yAxis.setLabel("Buyer Average Bid");
 
         LineChart<String,Number> statisticLineChart = new LineChart<>(xAxis,yAxis);
-        statisticLineChart.setTitle("Line Chart Sample");
+        statisticLineChart.setTitle("Average Value Line Chart");
+        statisticLineChart.setCreateSymbols(false);
         statisticLineChart.setAnimated(false);
 
         // Add series to the chart
@@ -36,7 +37,7 @@ public class StatisticLineChart {
 
         return new StackPane(statisticLineChart);
     }
-    public void updateChart(List<dto> BuyerAverageData,List<dto> SellerAverageData) {
+    public void updateChart(List<DTO> BuyerAverageData, List<DTO> SellerAverageData) {
         // Clear previous data
         //BuyerAverage.getData().clear();
         //SellerAverage.getData().clear();

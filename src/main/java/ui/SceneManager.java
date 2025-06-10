@@ -1,5 +1,6 @@
 package ui;
 
+import dto.collection.ParamDTO;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
@@ -14,13 +15,13 @@ public class SceneManager {
 
     public static void showStartMenu() {
         ControlMenu startMenu = new ControlMenu();
-        Scene scene = new Scene(startMenu.getView(), 800, 600);
+        Scene scene = new Scene(startMenu.getView(), 1000, 800);
         primaryStage.setScene(scene);
     }
 
-    public static void showSimulation() {
+    public static void showSimulation(ParamDTO configs) {
         LiveChart simulationView = new LiveChart();
-        Scene scene = new Scene(simulationView.getView(), 1000, 800);
+        Scene scene = new Scene(simulationView.getView(configs), 1000, 800);
 
         if(scene.getStylesheets().add(SceneManager.class.getResource("/style.css").toExternalForm())) {
             System.out.println("Stylesheet loaded successfully.");

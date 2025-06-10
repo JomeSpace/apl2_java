@@ -1,9 +1,9 @@
-import file.services.jsonService;
+import file.services.JsonService;
 
 public class main {
     // Main method to run the application
     public static void main(String[] args) {
-        jsonService jsonService = new jsonService("param.json");
+        JsonService jsonService = new JsonService("param.json");
         // Initialize the command manager
         commandmanager.CommandManager cm = new commandmanager.CommandManager();
         cm.start();

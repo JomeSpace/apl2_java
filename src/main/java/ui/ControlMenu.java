@@ -1,7 +1,7 @@
 package ui;
 
 import dto.collection.ParamDTO;
-import file.services.jsonService;
+import file.services.JsonService;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -11,15 +11,18 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+import static file.services.JsonService.exportJson;
+import static file.services.JsonService.importJson;
+
 public class ControlMenu {
     private VBox layout = new VBox(50);
     ParamDTO configs;
-    jsonService configService = new jsonService("param.json");
+    JsonService configService = new JsonService("param.json");
     TextField SellerTextField;
     TextField BuyerTextField;
 
     public ControlMenu() {
-        ParamDTO configs = configService.importJson();
+        ParamDTO configs = importJson();
         if(configs == null) throw new IllegalArgumentException("Invalid configuration: ");
         SellerTextField = new TextField(configs.numSellers().toString());
         BuyerTextField = new TextField(configs.numBuyers().toString());
@@ -41,12 +44,11 @@ public class ControlMenu {
 
         startButton.setOnAction(e -> {
             setConfig();
-            SceneManager.showSimulation();
+            SceneManager.showSimulation(configs);
         });
     }
     private void getSimConfig() {
-        ParamDTO paramDTO = configService.importJson();
-        configs = paramDTO;
+        this.configs = importJson();
     }
 
     public void setConfig() {
@@ -54,7 +56,8 @@ public class ControlMenu {
                 Integer.parseInt(SellerTextField.getText()),
                 Integer.parseInt(BuyerTextField.getText())
         );
-        configService.exportJson(Configs);
+        this.configs = Configs;
+        exportJson(Configs);
     }
 
     public Parent getView() {

@@ -6,7 +6,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.layout.StackPane;
-import dto.collection.dto;
+import dto.collection.DTO;
 
 import java.util.List;
 import java.util.Objects;
@@ -53,13 +53,13 @@ public class BarChart {
 
         return new StackPane(stackedBarChart);
     }
-    public void updateChart(List<dto> Data) {
+    public void updateChart(List<DTO> Data) {
         // Clear previous data
         ValueSeries.getData().clear();
         LimitSeries.getData().clear();
 
 
-        for (dto datum : Data) {
+        for (DTO datum : Data) {
             XYChart.Data<String, Number> valueData;
             XYChart.Data<String, Number> limitData;
             if (type.equals("buyer")) {

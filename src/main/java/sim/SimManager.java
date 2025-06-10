@@ -1,6 +1,7 @@
 package sim;
 
-import dto.collection.dto;
+import dto.collection.ParamDTO;
+import dto.collection.DTO;
 
 import java.util.List;
 
@@ -9,11 +10,12 @@ public class SimManager {
     Sellers sellers;
     Buyers buyers;
     private Thread simThread;
-    private volatile boolean running = false;
+    public volatile boolean running = false;
+    public volatile boolean paused = false;
 
-    public SimManager(int nSeller, int nBuyer) {
-        this.sellers = new Sellers(nSeller,50.0);
-        this.buyers = new Buyers(nBuyer,50.0);
+    public SimManager(ParamDTO configs) {
+        this.sellers = new Sellers(configs.numSellers(), 20.0);
+        this.buyers = new Buyers(configs.numBuyers(), 20.0);
     }
 
     public void startSimThread() {
@@ -21,38 +23,46 @@ public class SimManager {
             System.out.println("Simulation already running.");
             return;
         }
+
         running = true;
+        paused = false;
 
         simThread = new Thread(() -> {
-            try {
-                // Your loop: update buyers, sellers, etc.
-                while (running && !Thread.currentThread().isInterrupted()) {
-                    // 1) perform Simulation
-                    Market.handleTransactions(sellers.allSellers, buyers.allBuyers);
-
-                    this.sellers.updateBids();
-                    this.buyers.updateBids();
-
-                    System.out.println("Sellers:" + sellers.getAverageAsk() + " Buyers:" + buyers.getAverageBid());
-
+            // Your loop: update buyers, sellers, etc.
+            while (running && !Thread.currentThread().isInterrupted()) {
+                if (paused) {
                     try {
-                        Thread.sleep(100);
+                        Thread.sleep(100); // Sleep briefly while paused
+                        continue;
                     } catch (InterruptedException e) {
-                        break;
+                        Thread.currentThread().interrupt();
                     }
-
-                    // 2) sleep for 100ms (or however long)
-                    Thread.sleep(100);
                 }
-            } catch (InterruptedException e) {
-                // Thread was interrupted during sleep or wait
-                Thread.currentThread().interrupt();  // Preserve interrupt status
+
+                // 1) perform Simulation
+                Market.handleTransactions(sellers.allSellers, buyers.allBuyers);
+
+                this.sellers.updateBids();
+                this.buyers.updateBids();
+
+                System.out.println("Sellers:" + sellers.getAverageAsk() + " Buyers:" + buyers.getAverageBid());
+
+                if(sellers.getNumActives() == 0 || buyers.getNumActives() == 0) {
+                    System.out.println("Simulation ended: No active sellers or buyers.");
+                    killSimThread();
+                }
+                //sleep to simulate time passing
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    break;
+                }
             }
         },"SimThread");
-        simThread.setDaemon(true);
+
         simThread.start();
     }
-    public synchronized void stopSimThread() {
+    public synchronized void killSimThread() {
         if (!running) {
             System.out.println("Simulation is not running.");
             return;
@@ -63,19 +73,44 @@ public class SimManager {
         }
         System.out.println("Stop signal sent to simulation.");
     }
+    public void pauseThread() {
+        if (!running || paused) {
+            System.out.println("Simulation is already paused or not running.");
+            return;
+        }
+        paused = true;
+        System.out.println("Simulation paused.");
+    }
 
-    public List<dto> getBuyerData() {
+    public void resumeThread() {
+        if (!running) {
+            System.out.println("Simulation is not running.");
+            return;
+        }
+        if (!paused) {
+            System.out.println("Simulation is already running.");
+            return;
+        }
+        paused = false;
+        System.out.println("Simulation resumed.");
+    }
+
+    public boolean isPaused() {
+        return paused;
+    }
+
+    public List<DTO> getBuyerData() {
         return buyers.allBuyers.stream()
                 .map(b -> {
-                    return new dto(b.getId(), b.getBid(),b.getMaxBid(), b.getStatus());
+                    return new DTO(b.getId(), b.getBid(),b.getMaxBid(), b.getStatus());
                 })
                 .toList();
     }
 
-    public List<dto> getSellerData() {
+    public List<DTO> getSellerData() {
         return sellers.allSellers.stream()
                 .map(a -> {
-                    return new dto(a.getId(), a.getAsk(),a.getAskMin(),a.getStatus());
+                    return new DTO(a.getId(), a.getAsk(),a.getAskMin(),a.getStatus());
                 })
                 .toList();
     }

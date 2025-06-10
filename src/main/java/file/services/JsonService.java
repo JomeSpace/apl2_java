@@ -12,20 +12,20 @@ import java.nio.file.Path;
 
 import static java.lang.System.exit;
 
-public class jsonService implements JsonStructure {
-    String filePath;
+public class JsonService implements JsonStructure {
+    static String filePath;
 
-    public jsonService(String filePath) {
+    public JsonService(String filePath) {
         // Constructor for jsonService
         this.filePath = filePath;
     }
 
-    public ParamDTO importJson() {
+    public static ParamDTO importJson() {
         int value1 = 0;
         int value2 = 0;
 
         int[] values = null;
-        try (InputStream is = jsonService.class.getClassLoader().getResourceAsStream("param.json")) {
+        try (InputStream is = JsonService.class.getClassLoader().getResourceAsStream("param.json")) {
             if (is == null) {
                 System.err.println("File 'param.json' not found in resources.");
                 return new ParamDTO(value1, value2);
@@ -50,7 +50,7 @@ public class jsonService implements JsonStructure {
         return new ParamDTO(values[0], values[1]);
     }
 
-    public void exportJson(ParamDTO param) {
+    public static void exportJson(ParamDTO param) {
         JSONObject json = new JSONObject();
         Object[] values = { param.numBuyers(), param.numSellers() };
 
@@ -68,7 +68,7 @@ public class jsonService implements JsonStructure {
 
     public static void main(String[] args) {
         // Main method for testing
-        jsonService service = new jsonService("param.json");
+        JsonService service = new JsonService("param.json");
         ParamDTO result = service.importJson();
         if (result == null) {
             System.out.println("No data found in JSON file.");

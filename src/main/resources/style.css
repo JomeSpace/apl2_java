@@ -15,3 +15,16 @@
 .default-color0.chart-bar {
     -fx-bar-fill: #3498db; /* Blue for series 0 */
 }
+.stop-box {
+    -fx-background-color: #f8f8f8;
+    -fx-padding: 15;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.button {
+    -fx-font-size: 14px;
+    -fx-background-color: #888888;
+    -fx-text-fill: white;
+}

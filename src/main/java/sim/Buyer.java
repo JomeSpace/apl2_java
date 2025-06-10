@@ -21,14 +21,14 @@ public class Buyer {
     public void updateBid(){
         //update bid based on sell success in last cycle
         if(this.lastRoundSuccess==null || !this.lastRoundSuccess) {
-            this.Bid += 1.5;
+            this.Bid += 2;
             //determine status
             if(this.Bid > bidMax) {
                 this.status = false;
                 System.out.println("Buyer: "+this.id+" is out");
             }
         } else {
-            this.Bid -= 1.5;
+            this.Bid -= 2;
         }
 
         this.lastRoundSuccess = null;

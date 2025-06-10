@@ -17,7 +17,7 @@ public class Sellers {
                 }
         }
     }
-    public Double getAverageAsk(){
+    public Double getAverageAsk() {
         Double sum = 0.0;
         int count = 0;
         for (Seller seller : allSellers) {
@@ -27,5 +27,14 @@ public class Sellers {
             }
         }
         return sum/count;
+    }
+    public int getNumActives() {
+        int count = 0;
+        for (Seller seller : allSellers) {
+            if(seller.status) {
+                count++;
+            }
+        }
+        return count;
     }
 }
