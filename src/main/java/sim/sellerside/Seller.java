@@ -5,7 +5,7 @@ import static services.randomservice.NormalDistribution.getStdDev;
 public class Seller {
     public String id;
     Double Ask;
-    Boolean lastRoundSuccess;
+    public Boolean lastRoundSuccess;
     Double askMin;
     Boolean status;
 
@@ -43,5 +43,12 @@ public class Seller {
     }
     public boolean getStatus() {
         return this.status;
+    }
+    public void setLastRoundSuccess(Boolean lastRoundSuccess) {
+        this.lastRoundSuccess = lastRoundSuccess;
+    }
+
+    public Boolean getlastRoundSuccess() {
+        return this.lastRoundSuccess;
     }
 }

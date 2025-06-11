@@ -45,5 +45,14 @@ public class Buyer {
     public Double getMaxBid(){
         return bidMax;
     }
+
     public boolean getStatus() { return this.status; }
+
+    public void setLastRoundSuccess(Boolean lastRoundSuccess) {
+        this.lastRoundSuccess = lastRoundSuccess;
+    }
+
+    public Boolean getlastRoundSuccess() {
+        return this.lastRoundSuccess;
+    }
 }

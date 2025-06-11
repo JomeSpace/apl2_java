@@ -12,13 +12,13 @@ public class Transaction extends Market {
         IdService IdService = new IdService();
         this.Id=IdService.createId();
 
-        if (buyer.Bid > seller.Ask){
-            buyer.lastRoundSuccess = true;
-            seller.lastRoundSuccess = true;
+        if (buyer.getBid() > seller.getAsk()){
+            buyer.setLastRoundSuccess(true);
+            seller.setLastRoundSuccess(true);
             success = true;}
         else{
-            buyer.lastRoundSuccess = false;
-            seller.lastRoundSuccess = false;
+            buyer.setLastRoundSuccess(false);
+            seller.setLastRoundSuccess(false);
             success = false;
         }
     }

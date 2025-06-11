@@ -10,6 +10,10 @@ import java.util.ArrayList;
 public abstract class Market {
     String name;
 
+    /**
+     * @param allSellers
+     * @param allBuyers
+     */
     public static void handleTransactions(ArrayList<Seller> allSellers, ArrayList<Buyer> allBuyers) {
         //determine the number of possible transaction
         int iterations = Math.min(allSellers.size(), allBuyers.size());
@@ -22,20 +26,19 @@ public abstract class Market {
         ArrayList<Seller> randallSellers = new ArrayList<>(allSellers);
         Collections.shuffle(randallSellers);
 
+        //create transactions for each pair of buyers and sellers
         for(int i = 0; i < iterations; i++) {
-            if (randallSellers.get(i).status & randallBuyers.get(i).status) {
+            if (randallSellers.get(i).getStatus() & randallBuyers.get(i).getStatus()) {
                 Transaction transaction = new Transaction(randallSellers.get(i), randallBuyers.get(i));
             }
         }
-
-            //bring arrays together
+            //fuse arrays
             randallBuyers.sort(Comparator.comparing(Buyer::getId));
             randallSellers.sort(Comparator.comparing(Seller::getId));
 
            for(int j = 0; j < iterations; j++) {
-               allBuyers.get(j).lastRoundSuccess = randallBuyers.get(j).lastRoundSuccess;
-               allSellers.get(j).lastRoundSuccess = randallSellers.get(j).lastRoundSuccess;
+               allBuyers.get(j).setLastRoundSuccess(randallBuyers.get(j).getlastRoundSuccess());
+               allSellers.get(j).setLastRoundSuccess(randallSellers.get(j).getlastRoundSuccess());
            }
-            //todo add critical component
     }
 }
