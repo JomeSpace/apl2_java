@@ -2,6 +2,9 @@ package sim;
 
 import dto.collection.ParamDTO;
 import dto.collection.DTO;
+import sim.buyerside.Buyers;
+import sim.mediator.Market;
+import sim.sellerside.Sellers;
 
 import java.util.List;
 
@@ -42,11 +45,11 @@ public class SimManager {
                 // 1) perform Simulation
                 Market.handleTransactions(sellers.allSellers, buyers.allBuyers);
 
+                // Update bids for both sellers and buyers
                 this.sellers.updateBids();
                 this.buyers.updateBids();
 
-                System.out.println("Sellers:" + sellers.getAverageAsk() + " Buyers:" + buyers.getAverageBid());
-
+                // 2) check if simulation should continue
                 if(sellers.getNumActives() == 0 || buyers.getNumActives() == 0) {
                     System.out.println("Simulation ended: No active sellers or buyers.");
                     killSimThread();

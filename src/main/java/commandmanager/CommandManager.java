@@ -49,13 +49,13 @@ public class CommandManager extends Thread {
     public void run() {
         Scanner inputStream = new Scanner(System.in);
 
-        while (true) {
-            String[] input = inputStream.nextLine().split(" ");
-            manageCommand(input);
-        }
+
+        String[] input = inputStream.nextLine().split(" ");
+        manageCommand(input);
+
     }
 
-    void manageCommand(String[] input) {
+    public void manageCommand(String[] input) {
         String cmdName = input[0];
         Command selCmd = null;
         for (Command cmd : cmds) if (cmd.name().equalsIgnoreCase(cmdName)) { selCmd = cmd; break;}

@@ -1,4 +1,4 @@
-package file.services;
+package services.jsonservice;
 
 interface JsonStructure {
     public static final String NUM_BUYERS = "numBuyers";

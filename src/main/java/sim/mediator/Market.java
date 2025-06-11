@@ -1,8 +1,10 @@
-package sim;
+package sim.mediator;
+
+import sim.buyerside.Buyer;
+import sim.sellerside.Seller;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Random;
 import java.util.ArrayList;
 
 public abstract class Market {

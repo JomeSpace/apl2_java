@@ -1,4 +1,4 @@
-package ui;
+package ui.scenes;
 
 import dto.collection.ParamDTO;
 import javafx.animation.KeyFrame;
@@ -16,8 +16,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import sim.SimManager;
+import ui.elements.BarChart;
+import ui.elements.CommandBar;
+import ui.elements.StatisticLineChart;
 
 public class LiveChart {
+    //global Button for pause/resume
+    Button resumepauseButton = new Button("Pause/Resume Simulation");;
 
     BorderPane root = new BorderPane();
     private SimManager simManager;
@@ -56,14 +61,14 @@ public class LiveChart {
 
         // Stop Button
         Button stopButton = new Button("leave Simulation");
-       stopButton.setStyle("-fx-background-color: red; -fx-text-fill: white;");
+        stopButton.setStyle("-fx-background-color: red; -fx-text-fill: white;");
         stopButton.setOnAction(e -> {
             simManager.killSimThread();
             Platform.exit();
+            System.exit(0);
         });
 
         // Pause/Resume Button
-        Button resumepauseButton = new Button("Pause/Resume Simulation");
         resumepauseButton.setOnAction(e -> {
             if (simManager.isPaused()) {
                 simManager.resumeThread();
@@ -88,20 +93,16 @@ public class LiveChart {
         ControlBox.getStyleClass().add("stop-box");
         stopButton.getStyleClass().add("button");
         resumepauseButton.getStyleClass().add("button");
-        /*
-        HBox infoBox = new HBox(10,
-                new Label("Average Bid: "+ averageValue())
-        );
-        grid.add(infoBox, 0,2);*/
+
+        // Command Bar
+        CommandBar commandBar = new CommandBar(() -> simManager.pauseThread());
+        Node commandBarNode = commandBar.createCommandBar("Enter Command");
+        grid.add(commandBarNode,0,2);
+
         // Set grid as center of root pane
         root.setCenter(grid);
     }
-    /*private Double averageValue() {
-        return simManager.getBuyerData().stream()
-                .mapToDouble(dto -> dto.value())  // assuming value1 = bid
-                .average()
-                .orElse(0.0);
-    }*/
+
 
     public void startChartUpdateLoop() {
         timeline1 = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
@@ -111,6 +112,7 @@ public class LiveChart {
             }
 
             if (simManager.paused) {
+                resumepauseButton.setStyle("-fx-background-color: orange; -fx-text-fill: white;");
                 // Skip updates while paused
                 return;
             }

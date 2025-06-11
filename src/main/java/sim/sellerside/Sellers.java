@@ -1,9 +1,9 @@
-package sim;
+package sim.sellerside;
 
 import java.util.ArrayList;
 
 public class Sellers {
-    ArrayList<Seller> allSellers = new ArrayList<Seller>();
+    public ArrayList<Seller> allSellers = new ArrayList<Seller>();
     public Sellers(int n,Double Bid) {
         for (int i = 0; i < n; i++) {
             String Id = String.valueOf(i);

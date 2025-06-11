@@ -1,7 +1,7 @@
-package ui;
+package ui.scenes;
 
 import dto.collection.ParamDTO;
-import file.services.JsonService;
+import services.jsonservice.JsonService;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -10,9 +10,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import ui.SceneManager;
 
-import static file.services.JsonService.exportJson;
-import static file.services.JsonService.importJson;
+import static services.jsonservice.JsonService.exportJson;
+import static services.jsonservice.JsonService.importJson;
 
 public class ControlMenu {
     private VBox layout = new VBox(50);

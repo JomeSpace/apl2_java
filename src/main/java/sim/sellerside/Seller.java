@@ -1,6 +1,6 @@
-package sim;
+package sim.sellerside;
 
-import static random.generator.NormalDistribution.getStdDev;
+import static services.randomservice.NormalDistribution.getStdDev;
 
 public class Seller {
     public String id;

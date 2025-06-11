@@ -1,9 +1,9 @@
-package sim;
+package sim.buyerside;
 
 import java.util.ArrayList;
 
 public class Buyers {
-    ArrayList<Buyer> allBuyers = new ArrayList<Buyer>();
+    public ArrayList<Buyer> allBuyers = new ArrayList<Buyer>();
     public Buyers(int n, double bid) {
         for (int i = 0; i < n; i++) {
             String Id = String.valueOf(i);

@@ -1,10 +1,10 @@
 package ui;
 
 import dto.collection.ParamDTO;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import ui.scenes.ControlMenu;
+import ui.scenes.LiveChart;
 
 public class SceneManager {
     private static Stage primaryStage;

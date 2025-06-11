@@ -1,4 +1,4 @@
-package random.generator;
+package services.randomservice;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class NormalDistribution {

@@ -1,4 +1,4 @@
-package ui;
+package ui.elements;
 
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;

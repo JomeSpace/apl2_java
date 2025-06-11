@@ -1,6 +1,8 @@
-package sim;
+package sim.mediator;
 
-import identification.creator.IdService;
+import services.identificationservice.IdService;
+import sim.buyerside.Buyer;
+import sim.sellerside.Seller;
 
 public class Transaction extends Market {
     String Id;

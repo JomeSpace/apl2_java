@@ -1,6 +1,6 @@
-package sim;
+package sim.buyerside;
 
-import static random.generator.NormalDistribution.getStdDev;
+import static services.randomservice.NormalDistribution.getStdDev;
 
 
 public class Buyer {
