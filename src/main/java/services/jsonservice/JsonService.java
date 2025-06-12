@@ -1,83 +1,77 @@
 package services.jsonservice;
 
-import dto.collection.ParamDTO;
+import dtos.ParamDTO;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static java.lang.System.exit;
+import static services.jsonservice.JsonStructure.KEYS;
 
-public class JsonService implements JsonStructure {
-    static String filePath;
+/**
+ * "Persistenzschicht" here all the data is saved and extracted from/to a JSON file.
+ * Service class to handle reading from and writing to a JSON configuration file.
+ */
+public class JsonService {
+    private final Path filePath;
 
-    public JsonService(String filePath) {
-        // Constructor for jsonService
-        this.filePath = filePath;
+    private static final int DEFAULT_SELLERS = 10;
+    private static final int DEFAULT_BUYERS = 10;
+
+    /**
+     * Constructs a new JsonService with the given file name.
+     *
+     * @param fileName the name or path of the JSON file to work with
+     */
+    public JsonService(String fileName) {
+        this.filePath = Path.of(fileName);
     }
 
-    public static ParamDTO importJson() {
-        int value1 = 0;
-        int value2 = 0;
+    /**
+     * Imports parameters from the JSON file.
+     * Returns default values if the file is missing or invalid.
+     *
+     * @return a {@link ParamDTO} object with simulation parameters
+     */
+    public ParamDTO importJson() {
+        if (!Files.exists(filePath)) {
+            System.err.println("File '" + filePath + "' not found. Using defaults.");
+            return new ParamDTO(DEFAULT_SELLERS, DEFAULT_BUYERS);
+        }
 
-        int[] values = null;
-        try (InputStream is = JsonService.class.getClassLoader().getResourceAsStream("param.json")) {
-            if (is == null) {
-                System.err.println("File 'param.json' not found in resources.");
-                return new ParamDTO(value1, value2);
-            }
-
-            String content = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+        try {
+            String content = Files.readString(filePath, StandardCharsets.UTF_8);
             JSONObject json = new JSONObject(content);
 
-            values = new int[JsonStructure.KEYS.length];
-            for (int i = 0; i < JsonStructure.KEYS.length; i++) {
-                values[i] = json.getInt(JsonStructure.KEYS[i]);
-            }
+            int sellers = json.getInt(KEYS[0]);
+            int buyers = json.getInt(KEYS[1]);
 
-        } catch (IOException e) {
-            System.err.println("File reading failed: " + e.getMessage());
-            exit(1);
-        } catch (JSONException e) {
-            System.err.println("Invalid JSON content: " + e.getMessage());
-            exit(1);
+            return new ParamDTO(sellers, buyers);
+
+        } catch (IOException | JSONException e) {
+            System.err.println("Failed to read '" + filePath + "': " + e.getMessage());
+            return new ParamDTO(DEFAULT_SELLERS, DEFAULT_BUYERS);
         }
-
-        return new ParamDTO(values[0], values[1]);
     }
 
-    public static void exportJson(ParamDTO param) {
+    /**
+     * Exports the given parameters to the JSON file.
+     *
+     * @param param the {@link ParamDTO} a data-transfer-object containing values to save
+     */
+    public void exportJson(ParamDTO param) {
         JSONObject json = new JSONObject();
-        Object[] values = { param.numBuyers(), param.numSellers() };
+        json.put(KEYS[0], param.numSellers());
+        json.put(KEYS[1], param.numBuyers());
 
-        for (int i = 0; i < JsonStructure.KEYS.length; i++) {
-            json.put(JsonStructure.KEYS[i], values[i]);
-        }
-
-        try (FileWriter file = new FileWriter("src/main/resources/"+filePath)) {
-            file.write(json.toString(4)); // pretty print with indentation = 4
-            System.out.println("Saved to " + Path.of("src/main/resources/"+filePath).toAbsolutePath());
+        try (FileWriter writer = new FileWriter(filePath.toFile())) {
+            writer.write(json.toString(4)); // pretty-print JSON
+            System.out.println("Saved config to: " + filePath.toAbsolutePath());
         } catch (IOException e) {
-            System.err.println("Failed to write file: " + e.getMessage());
+            System.err.println("Failed to write file '" + filePath + "': " + e.getMessage());
         }
-    }
-
-    public static void main(String[] args) {
-        // Main method for testing
-        JsonService service = new JsonService("param.json");
-        ParamDTO result = service.importJson();
-        if (result == null) {
-            System.out.println("No data found in JSON file.");
-            return;
-        }
-        System.out.println(result.numBuyers());
-
-        result = new ParamDTO(108, 20);
-        System.out.println(result.numSellers());
-        service.exportJson(result);
     }
 }

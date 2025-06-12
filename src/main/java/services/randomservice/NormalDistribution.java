@@ -1,23 +1,32 @@
 package services.randomservice;
+
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Utility class to generate normally distributed random numbers.
+ */
 public class NormalDistribution {
 
     /**
-     * @param mean
-     * @param stdDev
-     * @return
+     * Generates a normally distributed random number with given mean and standard deviation.
+     *
+     * @param mean   the mean (average) value of the distribution
+     * @param stdDev the standard deviation of the distribution
+     * @return a random number from the normal distribution with specified mean and stdDev
      */
     public static double getStdDev(double mean, double stdDev) {
-        // Generate a standard normal (mean=0, stddev=1)
         double standardNormal = ThreadLocalRandom.current().nextGaussian();
-        // Scale and shift to get desired mean and stddev
         return mean + stdDev * standardNormal;
     }
+
+    /**
+     * Generates a normally distributed random number with given mean and a fixed standard deviation of 2.
+     *
+     * @param mean the mean (average) value of the distribution
+     * @return a random number from the normal distribution with specified mean and stdDev = 2
+     */
     public static double getStdDev(double mean) {
-        // Generate a standard normal (mean=0, stddev=1)
         double standardNormal = ThreadLocalRandom.current().nextGaussian();
-        // Scale and shift to get desired mean and stddev
         return mean + 2 * standardNormal;
     }
 }
